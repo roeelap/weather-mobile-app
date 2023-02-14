@@ -6,10 +6,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -18,6 +20,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.teamweather.databinding.ActivityMapsBinding;
 import com.google.android.gms.tasks.Task;
@@ -25,7 +28,7 @@ import com.google.android.gms.tasks.Task;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
 
     private final String TAG = "MapsActivity";
     private GoogleMap mMap;
@@ -113,6 +116,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (requestCode == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION &&
                 grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = true;
+            getCurrentDeviceLocation();
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -142,8 +146,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         getCurrentDeviceLocation();
         updateLocationUI();
+        mMap.setOnMapClickListener(this);
+        mMap.setOnMarkerClickListener(this);
         // Add markers to the map
         createMapMarkers();
+    }
+
+    @Override
+    public boolean onMarkerClick(@NonNull Marker marker) {
+        String name = marker.getTitle();
+        Log.i(TAG, "onMarkerClick: " + name);
+        for (TravelLocation location : locations) {
+            if (location.getName().equals(name)) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location.getLatLng(), 10));
+                break;
+            }
+        }
+
+        View getWeatherButton = findViewById(R.id.get_weather_button);
+        getWeatherButton.setVisibility(View.VISIBLE);
+
+        getWeatherButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("location", name);
+            startActivity(intent);
+        });
+
+        return false;
+    }
+
+    @Override
+    public void onMapClick(@NonNull LatLng latLng) {
+        Log.e(TAG, "onMapClick: " + latLng.latitude + ", " + latLng.longitude);
+        View getWeatherButton = findViewById(R.id.get_weather_button);
+        getWeatherButton.setVisibility(View.GONE);
     }
 
     private void createMapMarkers() {
