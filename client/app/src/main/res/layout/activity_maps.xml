@@ -24,7 +24,7 @@
         android:background="#FFFFFF"
         android:padding="10dp"
         android:text="@string/get_weather"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:visibility="gone"/>
 
 </RelativeLayout>
