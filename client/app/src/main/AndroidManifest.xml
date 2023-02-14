@@ -9,7 +9,7 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@android:drawable/ic_dialog_map"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.TeamWeather"
@@ -33,7 +33,7 @@
             android:name=".MainActivity"
             android:exported="false" />
 
-<!--        date first-->
+<!--        date first for debugging use-->
 <!--        <activity-->
 <!--            android:name=".MapsActivity"-->
 <!--            android:exported="true" />-->
@@ -47,6 +47,7 @@
 <!--                <category android:name="android.intent.category.LAUNCHER" />-->
 <!--            </intent-filter>-->
 <!--        </activity>-->
+
     </application>
 
 </manifest>
