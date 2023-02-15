@@ -7,8 +7,8 @@
     <string name="prompt_password">Password</string>
     <string name="welcome">Welcome!</string>
     <string name="login">Login</string>
-    <string name="create_account">Don\'t have an account? Create one </string>
-    <string name="here">here!</string>
+    <string name="dont_have_an_account">Don\'t have an account? </string>
+    <string name="create_one_here">Create one here!</string>
     <string name="create_your_account">Create your account</string>
     <string name="prompt_confirm_password">Confirm Password</string>
     <string name="button_create_account">Create account</string>

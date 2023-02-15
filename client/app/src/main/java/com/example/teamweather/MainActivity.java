@@ -8,15 +8,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.CalendarView;
-import android.widget.DatePicker;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
+    private TextView locationTextView;
     private TextView mDisplayDateFrom;
     private DatePickerDialog.OnDateSetListener mDateFromSetListener;
 
@@ -24,6 +22,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // set up the location title (get the location of the marker that was chosen in the map)
+        locationTextView = findViewById(R.id.textViewLocation);
+        String location = getIntent().getStringExtra("location");
+        locationTextView.setText(location);
 
         mDisplayDateFrom = findViewById(R.id.textView_selectDateFrom);
 
