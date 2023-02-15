@@ -2,4 +2,14 @@
     <string name="app_name">Team Weather</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="get_weather">Get weather for %1$s</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="welcome">Welcome!</string>
+    <string name="login">Login</string>
+    <string name="create_account">Don\'t have an account? Create one </string>
+    <string name="here">here!</string>
+    <string name="create_your_account">Create your account</string>
+    <string name="prompt_confirm_password">Confirm Password</string>
+    <string name="button_create_account">Create account</string>
 </resources>
