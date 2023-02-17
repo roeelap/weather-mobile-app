@@ -20,10 +20,10 @@
         app:layout_constraintVertical_bias="0.058" />
 
     <TextView
-        android:id="@+id/textView_from"
+        android:id="@+id/textView_day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="From:"
+        android:text="Day:"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.229"
@@ -32,7 +32,7 @@
         app:layout_constraintVertical_bias="0.14" />
 
     <TextView
-        android:id="@+id/textView_selectDateFrom"
+        android:id="@+id/textView_selectDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="Select Date"
@@ -40,7 +40,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.252"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_from"
+        app:layout_constraintTop_toBottomOf="@+id/textView_day"
         app:layout_constraintVertical_bias="0.015" />
 
     <TableLayout
@@ -62,7 +62,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Date" />
+                android:text="Time" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Weather" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -74,13 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Clouds" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="No / Go" />
+                android:text="Wind" />
         </TableRow>
 
         <TableRow
@@ -91,25 +91,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="1" />
+                android:text="06:00" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="15" />
+                android:text="Clear" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="6/8" />
+                android:text="18°C" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="No" />
+                android:text="5 knots" />
         </TableRow>
 
         <TableRow
@@ -120,25 +120,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="2" />
+                android:text="09:00" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="18" />
+                android:text="Clear" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="8/8" />
+                android:text="19°C" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="No" />
+                android:text="7 knots" />
         </TableRow>
 
         <TableRow
@@ -149,25 +149,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="3" />
+                android:text="12:00" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="20" />
+                android:text="Clear" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="2/8" />
+                android:text="17°C" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Go" />
+                android:text="2 knots" />
         </TableRow>
 
         <TableRow
@@ -178,25 +178,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="4" />
+                android:text="15:00" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="21" />
+                android:text="Clear" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="3/8" />
+                android:text="21°C" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Go" />
+                android:text="3 knots" />
         </TableRow>
 
         <TableRow
@@ -207,25 +207,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="5" />
+                android:text="18:00" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="19" />
+                android:text="Clear" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="2/8" />
+                android:text="18°C" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Go" />
+                android:text="4 knots" />
         </TableRow>
     </TableLayout>
 

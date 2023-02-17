@@ -15,8 +15,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private TextView locationTextView;
-    private TextView mDisplayDateFrom;
-    private DatePickerDialog.OnDateSetListener mDateFromSetListener;
+    private TextView mDisplayDate;
+    private DatePickerDialog.OnDateSetListener mDateSetListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,9 +28,9 @@ public class MainActivity extends AppCompatActivity {
         String location = getIntent().getStringExtra("location");
         locationTextView.setText(location);
 
-        mDisplayDateFrom = findViewById(R.id.textView_selectDateFrom);
+        mDisplayDate = findViewById(R.id.textView_selectDate);
 
-        mDisplayDateFrom.setOnClickListener(view -> {
+        mDisplayDate.setOnClickListener(view -> {
             Calendar cal = Calendar.getInstance();
             int year = cal.get(Calendar.YEAR);
             int month = cal.get(Calendar.MONTH);
@@ -39,18 +39,18 @@ public class MainActivity extends AppCompatActivity {
             DatePickerDialog dialog = new DatePickerDialog(
                     MainActivity.this,
                     android.R.style.Theme_Holo_Dialog_MinWidth,
-                    mDateFromSetListener,
+                    mDateSetListener,
                     year, month, day);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.show();
         });
 
-        mDateFromSetListener = (datePicker, year, month, day) -> {
+        mDateSetListener = (datePicker, year, month, day) -> {
             month = month + 1;
             Log.d(TAG, "onDateSet: date: dd/mm/yyyy " + day + "/" + month + "/" + year);
 
-            String dateFrom = day + "/" + month + "/" + year;
-            mDisplayDateFrom.setText(dateFrom);
+            String date = day + "/" + month + "/" + year;
+            mDisplayDate.setText(date);
         };
     }
 }
