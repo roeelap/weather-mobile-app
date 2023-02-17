@@ -1,9 +1,19 @@
 const express = require('express');
 const request = require('request');
+const MongoClient = require('mongodb').MongoClient;
 
 const PORT = 8080;
-// our api key for openweathermap service
+// our api key for open-weather-map service
 const API_KEY_OPEN_WEATHER_MAP = '51e61848b36dfec3fd6759c210361958';
+
+const MONGO_URL = 'mongodb+srv://rlapushin:roee3171999@weather-mobile-app.iaar1av.mongodb.net/?retryWrites=true&w=majority';
+const DATABASE_NAME = 'weather-mobile-app';
+const USERS_COLLECTION_NAME = 'users';
+const client = new MongoClient(MONGO_URL, {
+    useNewUrlParser: true,
+	useUnifiedTopology: true
+});
+
 
 let app = express();
 
@@ -57,6 +67,42 @@ function getWeather (lat, lon, cb) {
     });
 	// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 }
+
+app.get('/validate-user', async (req, res) => {
+	let userName = req.query.userName || null;
+	let password = req.query.password || null;
+	if (userName === null || password === null) {
+		return res.status(500).json({err: "please provide valid credentials!"});
+	}
+	console.log("received userName: " + userName + ", password: " + password);
+
+	client.connect()
+	.then(async () => {
+		console.log("connected to database!");
+		const collection = client.db(DATABASE_NAME).collection(USERS_COLLECTION_NAME);
+		const result = await collection.findOne({userName: userName, password: password});
+		console.log("user exists: " + (result !== null));
+		return res.json({result: result !== null});
+	})
+});
+
+app.get('/create-user', (req, res) => {
+	let userName = req.query.userName || null;
+	let password = req.query.password || null;
+	if (userName === null || password === null) {
+		return res.status(500).json({err: "please provide valid credentials!"});
+	}
+	console.log("received userName: " + userName + ", password: " + password);
+
+	client.connect()
+	.then(async () => {
+		console.log("connected to database!");
+		const collection = client.db(DATABASE_NAME).collection(USERS_COLLECTION_NAME);
+		const result = await collection.insertOne({userName: userName, password: password});
+		console.log("result: " + result);
+		return res.json({result: result.acknowledged});
+	})
+});
 
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);

@@ -181,6 +181,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         getWeatherButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("location", name);
+            intent.putExtra("lat", marker.getPosition().latitude);
+            intent.putExtra("lng", marker.getPosition().longitude);
             startActivity(intent);
         });
         return false;

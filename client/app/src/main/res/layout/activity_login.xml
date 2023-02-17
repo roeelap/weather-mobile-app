@@ -12,21 +12,21 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
         android:layout_marginVertical="10dp"
+        android:gravity="center"
         android:textSize="30sp"
         android:text="@string/welcome"/>
 
     <EditText
-        android:id="@+id/editTextEmailAddress"
+        android:id="@+id/editTextUserName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="30dp"
         android:layout_marginVertical="10dp"
-        android:hint="@string/prompt_email"
-        android:inputType="textEmailAddress"
+        android:hint="@string/prompt_userName"
         android:minHeight="48dp"
         android:drawableStart="@drawable/baseline_email_24"
         android:drawablePadding="5dp"
-        tools:ignore="Autofill" />
+        tools:ignore="Autofill,VisualLintTextFieldSize" />
 
     <EditText
         android:id="@+id/editTextPassword"
@@ -39,7 +39,7 @@
         android:minHeight="48dp"
         android:drawableStart="@drawable/baseline_verified_user_24"
         android:drawablePadding="5dp"
-        tools:ignore="Autofill" />
+        tools:ignore="Autofill,VisualLintTextFieldSize" />
 
     <ProgressBar
         android:id="@+id/idPBLoading"
@@ -56,10 +56,11 @@
         android:layout_marginHorizontal="33dp"
         android:layout_marginVertical="10dp"
         android:backgroundTint="#73BFE1"
+        android:minHeight="48dp"
         android:text="@string/login"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
-        android:minHeight="48dp" />
+        tools:ignore="TextContrastCheck,VisualLintButtonSize" />
 
     <LinearLayout
         android:layout_width="match_parent"
