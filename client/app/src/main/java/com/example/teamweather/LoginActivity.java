@@ -35,7 +35,13 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         Button loginButton = findViewById(R.id.login_button);
-        loginButton.setOnClickListener(v -> login());
+        loginButton.setOnClickListener(v -> {
+            final String userName = userNameEditText.getText().toString();
+            final String password = passwordEditText.getText().toString();
+            login(userName, password);
+        });
+
+        autoLogin();
     }
 
     /**
@@ -43,15 +49,13 @@ public class LoginActivity extends AppCompatActivity {
      * It validates the user and if the user exists, it will start the MapsActivity.
      * It checks if the user exists in the database by using the UserFetcher class to communicate with the server.
      */
-    private void login() {
+    private void login(String userName, String password) {
         Log.d(TAG, "login attempt");
 
         UserFetcher fetcher = new UserFetcher(this);
-        final String email = userNameEditText.getText().toString();
-        final String password = passwordEditText.getText().toString();
         progressBar.setVisibility(ProgressBar.VISIBLE);
 
-        fetcher.fetchUser(false, email, password, response -> {
+        fetcher.fetchUser(false, userName, password, response -> {
             progressBar.setVisibility(ProgressBar.GONE);
             if (response.isError) {
                 Toast.makeText(LoginActivity.this, "Error while trying to log in, please try again", Toast.LENGTH_SHORT).show();
@@ -66,5 +70,14 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "User does not exist", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    /**
+     * This method is used for debugging purposes only.
+     * It automatically logs in with the user "roee" and password "roee317" which
+     * are valid credentials.
+     */
+    private void autoLogin() {
+        login("roee", "roee317");
     }
 }
