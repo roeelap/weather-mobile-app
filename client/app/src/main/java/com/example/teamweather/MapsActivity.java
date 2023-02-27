@@ -27,7 +27,6 @@ import com.example.teamweather.databinding.ActivityMapsBinding;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
 
@@ -39,7 +38,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationClient;
     private LatLng currentDeviceLocation;
 
-    private final List<TravelLocation> locations = new ArrayList<>();
+    private ArrayList<TravelLocation> markers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +46,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ActivityMapsBinding binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        locations.add(new TravelLocation("Tel Aviv", new LatLng(32.0853, 34.7818)));
-        locations.add(new TravelLocation("Haifa", new LatLng(32.7940, 34.9896)));
-        locations.add(new TravelLocation("Jerusalem", new LatLng(31.7683, 35.2137)));
-        locations.add(new TravelLocation("Eilat", new LatLng(29.5581, 34.9482)));
-        locations.add(new TravelLocation("Beer Sheva", new LatLng(31.2524, 34.7913)));
-        locations.add(new TravelLocation("Kiryat Shmona", new LatLng(33.2100, 35.5700)));
+        //locations.add(new TravelLocation("Tel Aviv", new LatLng(32.0853, 34.7818)));
+        //locations.add(new TravelLocation("Haifa", new LatLng(32.7940, 34.9896)));
+        //locations.add(new TravelLocation("Jerusalem", new LatLng(31.7683, 35.2137)));
+        //locations.add(new TravelLocation("Eilat", new LatLng(29.5581, 34.9482)));
+        //locations.add(new TravelLocation("Beer Sheva", new LatLng(31.2524, 34.7913)));
+        //locations.add(new TravelLocation("Kiryat Shmona", new LatLng(33.2100, 35.5700)));
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            markers = bundle.getParcelableArrayList("markers");
+        }
 
         getLocationPermission();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -204,7 +207,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Creates markers for all the locations in the locations list.
      */
     private void createMapMarkers() {
-        for (TravelLocation location : locations) {
+        for (TravelLocation location : markers) {
             mMap.addMarker(new MarkerOptions().position(location.getLatLng()).title(location.getName()));
         }
     }

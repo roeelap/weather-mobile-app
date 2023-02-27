@@ -51,12 +51,15 @@ public class LoginActivity extends AppCompatActivity {
         final String password = passwordEditText.getText().toString();
         progressBar.setVisibility(ProgressBar.VISIBLE);
 
-        fetcher.dispatchRequest(false, email, password, response -> {
+        fetcher.fetchUser(false, email, password, response -> {
             progressBar.setVisibility(ProgressBar.GONE);
             if (response.isError) {
                 Toast.makeText(LoginActivity.this, "Error while trying to log in, please try again", Toast.LENGTH_SHORT).show();
             } else if (response.isSuccessful) {
                 Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("markers", response.userMarkers);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
             } else {

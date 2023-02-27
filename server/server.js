@@ -81,8 +81,12 @@ app.get('/validate-user', async (req, res) => {
 		console.log("connected to database!");
 		const collection = client.db(DATABASE_NAME).collection(USERS_COLLECTION_NAME);
 		const result = await collection.findOne({userName: userName, password: password});
-		console.log("user exists: " + (result !== null));
-		return res.json({result: result !== null});
+		console.log("user exists: " + (result !== null), result);
+		if (result !== null) {
+			return res.json({result: true, markers: result.markers});
+		} else {
+			return res.json({result: false, markers: []});
+		}
 	})
 });
 
@@ -100,7 +104,7 @@ app.get('/create-user', (req, res) => {
 		const collection = client.db(DATABASE_NAME).collection(USERS_COLLECTION_NAME);
 		const result = await collection.insertOne({userName: userName, password: password});
 		console.log("result: " + result);
-		return res.json({result: result.acknowledged});
+		return res.json({result: result.acknowledged, markers: []});
 	})
 });
 
