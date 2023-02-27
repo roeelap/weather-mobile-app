@@ -44,28 +44,31 @@ function getWeather (lat, lon, cb) {
 	// for debugging use
 	lat = 32.085300;
 	lon = 34.781769;
-	let cnt = 16; // The numbers of days to get forcast for - 16 is the maximun
-	let url = `api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY_OPEN_WEATHER_MAP}&units=metric`;
-    // let url = `https://api.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${lon}&cnt=${cnt}&appid=${API_KEY_OPEN_WEATHER_MAP}&units=metric`;
+	let url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY_OPEN_WEATHER_MAP}&units=metric`;
     console.log("The request url is: " + url );
     // the request to get the weather
-	//TODO: <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     request.get({url: url, json: true, headers: {'User-Agent': 'request'}}, 
     	(err, res, data) => {
 	        if (err) {
 	            return cb(err, null);
 	        } else {
 				// Getting the relevant data from the json
-				let metaData = data["Meta Data"];
-				let timeSeries = data["Time Series (5min)"];
-				let latestTime = metaData["3. Last Refreshed"];
-				let latestData = timeSeries[latestTime];
-				let price = latestData["4. close"];
-				return cb(null, {"price": price});
+				let relevantData = [];
+				data.list.forEach(item => {
+					let relevantItem = {
+						dateTime: item.dt_txt,
+						weather: item.weather[0].description,
+						temperature: item.main.temp,
+						windSpeed: item.wind.speed,
+						icon: item.weather[0].icon
+					};
+					relevantData.push(relevantItem);
+				});
+				console.log(relevantData);
+				return cb(null, relevantData);
 	        }
 	    
     });
-	// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 }
 
 app.get('/validate-user', async (req, res) => {
@@ -110,3 +113,5 @@ app.listen(PORT, () => {
 
 // local URL:
 // http://localhost:8080/weather
+// Raw Json:
+// https://api.openweathermap.org/data/2.5/forecast?lat=32.085300&lon=34.781769&appid=51e61848b36dfec3fd6759c210361958&units=metric
