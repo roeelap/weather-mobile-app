@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         // connecting to the button
         fetchButton = findViewById(R.id.search);
-        fetchButton.setOnClickListener(view -> fetchWeather(view));
+        fetchButton.setOnClickListener(this::fetchWeather);
     }
 
     public void fetchWeather(final View view) {
