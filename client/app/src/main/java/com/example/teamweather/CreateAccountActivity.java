@@ -48,7 +48,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         progressBar.setVisibility(ProgressBar.VISIBLE);
         UserFetcher fetcher = new UserFetcher(this);
-        fetcher.dispatchRequest(true, userName, password, response -> {
+        fetcher.fetchUser(true, userName, password, response -> {
             progressBar.setVisibility(ProgressBar.GONE);
             if (response.isError) {
                 Toast.makeText(CreateAccountActivity.this, "Error while trying to create account, please try again", Toast.LENGTH_SHORT).show();

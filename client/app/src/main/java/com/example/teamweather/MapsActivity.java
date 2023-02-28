@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -27,9 +29,10 @@ import com.example.teamweather.databinding.ActivityMapsBinding;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
 
     private final String TAG = "MapsActivity";
     private GoogleMap mMap;
@@ -39,7 +42,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationClient;
     private LatLng currentDeviceLocation;
 
-    private final List<TravelLocation> locations = new ArrayList<>();
+    private ArrayList<TravelLocation> locations;
+    private final ArrayList<Marker> markers = new ArrayList<>();
+
+    private View getWeatherButton;
+    private View saveMarkerButton;
+    private View locationNameEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +55,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ActivityMapsBinding binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        locations.add(new TravelLocation("Tel Aviv", new LatLng(32.0853, 34.7818)));
-        locations.add(new TravelLocation("Haifa", new LatLng(32.7940, 34.9896)));
-        locations.add(new TravelLocation("Jerusalem", new LatLng(31.7683, 35.2137)));
-        locations.add(new TravelLocation("Eilat", new LatLng(29.5581, 34.9482)));
-        locations.add(new TravelLocation("Beer Sheva", new LatLng(31.2524, 34.7913)));
-        locations.add(new TravelLocation("Kiryat Shmona", new LatLng(33.2100, 35.5700)));
+        // get the markers previously added by the user
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            locations = bundle.getParcelableArrayList("markers");
+        }
 
+        getWeatherButton = findViewById(R.id.get_weather_button);
+        saveMarkerButton = findViewById(R.id.save_marker_button);
+        locationNameEditText = findViewById(R.id.location_name_edit_text);
+
+        // set up location
         getLocationPermission();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -159,7 +171,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         updateLocationUI();
         mMap.setOnMapClickListener(this);
         mMap.setOnMarkerClickListener(this);
-        createMapMarkers();
+        createUserMapMarkers();
+    }
+
+    private Marker createMapMarker(String name, LatLng latLng) {
+        return mMap.addMarker(new MarkerOptions().position(latLng).title(name));
+    }
+
+    /**
+     * Creates markers for all the locations in the locations list.
+     */
+    private void createUserMapMarkers() {
+        for (TravelLocation location : locations) {
+            Marker newMarker = createMapMarker(location.getName(), location.getLatLng());
+            markers.add(newMarker);
+        }
     }
 
     /**
@@ -174,17 +200,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Log.i(TAG, "onMarkerClick: " + name);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 10));
 
-        View getWeatherButton = findViewById(R.id.get_weather_button);
-        ((Button) getWeatherButton).setText(getString(R.string.get_weather, name));
+        // show the get weather button and set its text to the marker's name
+        setUpGetWeatherButton(name, marker.getPosition().latitude, marker.getPosition().longitude);
         getWeatherButton.setVisibility(View.VISIBLE);
 
-        getWeatherButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("location", name);
-            intent.putExtra("lat", marker.getPosition().latitude);
-            intent.putExtra("lng", marker.getPosition().longitude);
-            startActivity(intent);
-        });
+        // remove any markers that were added to the map but not saved
+        removeUnsavedMarkers();
+        saveMarkerButton.setVisibility(View.GONE);
+        locationNameEditText.setVisibility(View.GONE);
+
         return false;
     }
 
@@ -196,16 +220,65 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapClick(@NonNull LatLng latLng) {
         Log.e(TAG, "onMapClick: " + latLng.latitude + ", " + latLng.longitude);
-        View getWeatherButton = findViewById(R.id.get_weather_button);
-        getWeatherButton.setVisibility(View.GONE);
+
+        // if the button is visible, remove it from the screen
+        if (getWeatherButton.getVisibility() == View.VISIBLE) {
+            getWeatherButton.setVisibility(View.GONE);
+            // also, remove any markers that were added to the map but not saved
+            removeUnsavedMarkers();
+            saveMarkerButton.setVisibility(View.GONE);
+            locationNameEditText.setVisibility(View.GONE);
+        } else {
+            // if the button was not visible, propose to add a new marker
+            Marker newMarker = createMapMarker("new location", latLng);
+            markers.add(newMarker);
+            locationNameEditText.setVisibility(View.VISIBLE);
+            setUpSaveButtonAndEditText(newMarker);
+            saveMarkerButton.setVisibility(View.VISIBLE);
+            setUpGetWeatherButton("new location", latLng.latitude, latLng.longitude);
+            getWeatherButton.setVisibility(View.VISIBLE);
+        }
     }
 
-    /**
-     * Creates markers for all the locations in the locations list.
-     */
-    private void createMapMarkers() {
-        for (TravelLocation location : locations) {
-            mMap.addMarker(new MarkerOptions().position(location.getLatLng()).title(location.getName()));
+    private void removeUnsavedMarkers() {
+        for (Marker marker : markers) {
+            if (Objects.equals(marker.getTitle(), "new location")) {
+                marker.remove();
+            }
         }
+    }
+
+    private void setUpGetWeatherButton(String name, double lat, double lng) {
+        ((Button) getWeatherButton).setText(getString(R.string.get_weather, name));
+        ((Button) getWeatherButton).setText(getString(R.string.get_weather, name));
+        getWeatherButton.setOnClickListener(v -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("location", name);
+            intent.putExtra("lat", lat);
+            intent.putExtra("lng", lng);
+            startActivity(intent);
+        });
+    }
+
+    private void setUpSaveButtonAndEditText(Marker marker) {
+        ((EditText)locationNameEditText).setText(marker.getTitle());
+
+        saveMarkerButton.setOnClickListener(v -> {
+            String name = ((EditText)locationNameEditText).getText().toString();
+            if (name.isEmpty() || name.equals("new location")) {
+                Toast.makeText(this, "Please enter a valid name for the location", Toast.LENGTH_SHORT).show();
+            } else {
+                marker.setTitle(name);
+                saveMarkerButton.setVisibility(View.GONE);
+                locationNameEditText.setVisibility(View.GONE);
+
+                // add the marker to the list of user locations
+                locations.add(new TravelLocation(name, new LatLng(marker.getPosition().latitude, marker.getPosition().longitude)));
+
+                // TODO: save the marker to the database
+
+                Toast.makeText(this, "Location saved", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

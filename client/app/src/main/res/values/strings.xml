@@ -14,4 +14,6 @@
     <string name="button_create_account">Create account</string>
     <string name="googleMapsApiKey">AIzaSyDz2HkpxvxPdlMJW_Ux0RfIxJfGscExSq0</string>
     <string name="prompt_userName">Username</string>
+    <string name="save_location_button">Save Location</string>
+    <string name="new_location_hint">New location</string>
 </resources>
