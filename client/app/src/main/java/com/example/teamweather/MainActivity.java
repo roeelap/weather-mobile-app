@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             }
             // Parse the JSON response
             try {
-                JSONArray jsonArray = new JSONArray(response.weather);
+                JSONArray jsonArray = response.weather;
                 TableLayout tableLayout = findViewById(R.id.weather_table);
 
                 // goes over the data and inserts it to the table
