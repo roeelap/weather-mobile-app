@@ -62,7 +62,8 @@ public class LoginActivity extends AppCompatActivity {
             } else if (response.isSuccessful) {
                 Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("markers", response.userMarkers);
+                bundle.putString("userName", userName);
+                bundle.putParcelableArrayList("locations", response.userLocations);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 finish();

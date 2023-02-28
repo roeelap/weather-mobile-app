@@ -1,5 +1,6 @@
 const express = require('express');
 const request = require('request');
+const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 
 const PORT = 8080;
@@ -16,6 +17,8 @@ const client = new MongoClient(MONGO_URL, {
 
 
 let app = express();
+app.use(bodyParser.urlencoded({extended : true}));
+app.use(bodyParser.json());
 
 app.get('/weather', (req, res) => {
 	console.log("inside app.get");
@@ -91,7 +94,11 @@ app.get('/validate-user', async (req, res) => {
 		const collection = client.db(DATABASE_NAME).collection(USERS_COLLECTION_NAME);
 		const result = await collection.findOne({userName: userName, password: password});
 		console.log("user exists: " + (result !== null), result);
+		client.close();
 		if (result !== null) {
+			if (result.markers === null) {
+				return res.json({result: true, markers: []});
+			}
 			return res.json({result: true, markers: result.markers});
 		} else {
 			return res.json({result: false, markers: []});
@@ -111,10 +118,36 @@ app.get('/create-user', (req, res) => {
 	.then(async () => {
 		console.log("connected to database!");
 		const collection = client.db(DATABASE_NAME).collection(USERS_COLLECTION_NAME);
-		const result = await collection.insertOne({userName: userName, password: password});
+		const result = await collection.insertOne({userName: userName, password: password, markers: []});
 		console.log("result: " + result);
+		client.close();
 		return res.json({result: result.acknowledged, markers: []});
 	})
+});
+
+app.post('/update-user-markers', (req, res) => {
+	console.log("received post request to update user markers");
+	console.dir(req.body)
+	let userName = req.body.userName || null;
+	let markers = req.body.markers || null;
+
+	if (userName === null || markers === null) {
+		console.log("invalid data!");
+		return res.status(500).json({err: "please provide valid data!"});
+	}
+
+	client.connect()
+	.then(async () => {
+		console.log("connected to database!");
+		const collection = client.db(DATABASE_NAME).collection(USERS_COLLECTION_NAME);
+		const result = await collection.updateOne(
+			{userName: userName},
+			{$set: {markers: markers}}
+		)
+		console.log("result: " + result);
+		client.close();
+		return res.json({result: result.acknowledged});
+	});
 });
 
 app.listen(PORT, () => {
