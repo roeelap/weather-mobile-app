@@ -44,6 +44,7 @@
         app:layout_constraintVertical_bias="0.015" />
 
     <TableLayout
+        android:id="@+id/weather_table"
         android:layout_width="340dp"
         android:layout_height="373dp"
         android:layout_marginTop="32dp"
@@ -81,6 +82,68 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Wind" />
+        </TableRow>
+
+        <TableRow
+            android:background="#E4F1F7"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/time_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="00:00" />
+
+            <TextView
+                android:id="@+id/weather_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="-" />
+
+            <TextView
+                android:id="@+id/temp_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="18°C" />
+
+            <TextView
+                android:id="@+id/wind_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="5 knots" />
+        </TableRow>
+
+        <TableRow
+            android:background="#E4F1F7"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="03:00" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Clear" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="18°C" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="5 knots" />
         </TableRow>
 
         <TableRow

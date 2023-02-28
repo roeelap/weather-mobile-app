@@ -22,28 +22,27 @@ app.get('/weather', (req, res) => {
 	// recieving the lat and lon of the location
     let lat = req.query.lat;
 	let lon = req.query.lon;
+	let date = req.query.date;
 
 	if (lat === null || lon === null) {
 		return res.status(500).json({err: "please provide valid coordinates!"});
 	}
 
-    console.log("recieved lat: " + lat + ", lon: " + lon);
+    console.log("recieved lat: " + lat + ", lon: " + lon + ", date: " + date);
 
     // calling getWeather function
-	getWeather(lat, lon, (err, json) => {
+	getWeather(lat, lon, date, (err, json) => {
 		if(err){
 		    console.log("err message: " + err.message);
 			return res.status(500).json({err: err.message});
 		}
+		console.log("Got a json to send back..");
 		console.log(json);
 		return res.json(json);
 	});
 });
 
-function getWeather (lat, lon, cb) {
-	// for debugging use
-	lat = 32.085300;
-	lon = 34.781769;
+function getWeather (lat, lon, date, cb) {
 	let url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY_OPEN_WEATHER_MAP}&units=metric`;
     console.log("The request url is: " + url );
     // the request to get the weather
@@ -55,16 +54,22 @@ function getWeather (lat, lon, cb) {
 				// Getting the relevant data from the json
 				let relevantData = [];
 				data.list.forEach(item => {
-					let relevantItem = {
-						dateTime: item.dt_txt,
-						weather: item.weather[0].description,
-						temperature: item.main.temp,
-						windSpeed: item.wind.speed,
-						icon: item.weather[0].icon
-					};
-					relevantData.push(relevantItem);
+					// Only add items with date recieved
+					if (item.dt_txt.startsWith(date)) {
+						let dateSplit = item.dt_txt.split(" ")[0];
+						let timeSplit = item.dt_txt.split(" ")[1].split(":").slice(0, 2).join(":");
+						let relevantItem = {
+							date: dateSplit,
+							time: timeSplit,
+							weather: item.weather[0].description,
+							temp: item.main.temp,
+							wind: item.wind.speed,
+							icon: item.weather[0].icon
+						};
+						relevantData.push(relevantItem);
+					}
 				});
-				console.log(relevantData);
+				console.log("Data cleaned!");
 				return cb(null, relevantData);
 	        }
 	    
@@ -113,5 +118,7 @@ app.listen(PORT, () => {
 
 // local URL:
 // http://localhost:8080/weather
+// local URL with demo details:
+// http://localhost:8080/weather?lat=32.085300&lon=34.781769&date=2023-03-01
 // Raw Json:
 // https://api.openweathermap.org/data/2.5/forecast?lat=32.085300&lon=34.781769&appid=51e61848b36dfec3fd6759c210361958&units=metric
