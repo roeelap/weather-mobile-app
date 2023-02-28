@@ -17,8 +17,8 @@ public class UserFetcher {
 
     private static final String TAG = "UserFetcher";
     private final RequestQueue _queue;
-    private final static String VALIDATE_USER_REQUEST_URL = "http://10.0.0.27:8080/validate-user";
-    private final static String CREATE_USER_REQUEST_URL = "http://10.0.0.27:8080/create-user";
+    private final static String VALIDATE_USER_REQUEST_URL = "http://10.0.2.2:8080/validate-user";
+    private final static String CREATE_USER_REQUEST_URL = "http://10.0.2.2:8080/create-user";
 
     public static class UserResponse {
         public boolean isError;
