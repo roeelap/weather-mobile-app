@@ -122,24 +122,28 @@
             android:padding="5dp">
 
             <TextView
+                android:id="@+id/time_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="03:00" />
 
             <TextView
+                android:id="@+id/weather_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Clear" />
+                android:text="-" />
 
             <TextView
+                android:id="@+id/temp_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="18°C" />
 
             <TextView
+                android:id="@+id/wind_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -151,24 +155,28 @@
             android:padding="5dp">
 
             <TextView
+                android:id="@+id/time_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="06:00" />
 
             <TextView
+                android:id="@+id/weather_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Clear" />
+                android:text="-" />
 
             <TextView
+                android:id="@+id/temp_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="18°C" />
 
             <TextView
+                android:id="@+id/wind_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -180,24 +188,28 @@
             android:padding="5dp">
 
             <TextView
+                android:id="@+id/time_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="09:00" />
 
             <TextView
+                android:id="@+id/weather_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Clear" />
+                android:text="-" />
 
             <TextView
+                android:id="@+id/temp_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="19°C" />
 
             <TextView
+                android:id="@+id/wind_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -209,24 +221,28 @@
             android:padding="5dp">
 
             <TextView
+                android:id="@+id/time_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="12:00" />
 
             <TextView
+                android:id="@+id/weather_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Clear" />
+                android:text="-" />
 
             <TextView
+                android:id="@+id/temp_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="17°C" />
 
             <TextView
+                android:id="@+id/wind_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -238,24 +254,28 @@
             android:padding="5dp">
 
             <TextView
+                android:id="@+id/time_6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="15:00" />
 
             <TextView
+                android:id="@+id/weather_6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Clear" />
+                android:text="-" />
 
             <TextView
+                android:id="@+id/temp_6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="21°C" />
 
             <TextView
+                android:id="@+id/wind_6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -267,24 +287,28 @@
             android:padding="5dp">
 
             <TextView
+                android:id="@+id/time_7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="18:00" />
 
             <TextView
+                android:id="@+id/weather_7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Clear" />
+                android:text="-" />
 
             <TextView
+                android:id="@+id/temp_7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="18°C" />
 
             <TextView
+                android:id="@+id/wind_7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -296,24 +320,28 @@
             android:padding="5dp">
 
             <TextView
+                android:id="@+id/time_8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="21:00" />
 
             <TextView
+                android:id="@+id/weather_8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Clear" />
+                android:text="-" />
 
             <TextView
+                android:id="@+id/temp_8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="18°C" />
 
             <TextView
+                android:id="@+id/wind_8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

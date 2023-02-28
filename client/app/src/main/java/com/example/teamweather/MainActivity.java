@@ -105,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
                 JSONArray jsonArray = response.weather;
                 TableLayout tableLayout = findViewById(R.id.weather_table);
 
+                // counter to match the times on the day of the search
+                int j = 0;
+
                 // goes over the data and inserts it to the table
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -113,7 +116,30 @@ public class MainActivity extends AppCompatActivity {
                     double temp = jsonObject.getDouble("temp");
                     double wind = jsonObject.getDouble("wind");
 
-                    ((TextView) MainActivity.this.findViewById(R.id.weather_1)).setText(weather);
+                    int textViewId_time = getResources().getIdentifier("time_" + (j+1), "id", getPackageName());
+                    int textViewId_weather = getResources().getIdentifier("weather_" + (j+1), "id", getPackageName());
+                    int textViewId_temp = getResources().getIdentifier("temp_" + (j+1), "id", getPackageName());
+                    int textViewId_wind = getResources().getIdentifier("wind_" + (j+1), "id", getPackageName());
+
+                    String checkTime = String.valueOf(((TextView) MainActivity.this.findViewById(textViewId_time)).getText());
+
+                    while (!time.equals(checkTime)) {
+                        ((TextView) MainActivity.this.findViewById(textViewId_weather)).setText("-");
+                        ((TextView) MainActivity.this.findViewById(textViewId_temp)).setText("-");
+                        ((TextView) MainActivity.this.findViewById(textViewId_wind)).setText("-");
+                        j++;
+                        textViewId_time = getResources().getIdentifier("time_" + (j+1), "id", getPackageName());
+                        textViewId_weather = getResources().getIdentifier("weather_" + (j+1), "id", getPackageName());
+                        textViewId_temp = getResources().getIdentifier("temp_" + (j+1), "id", getPackageName());
+                        textViewId_wind = getResources().getIdentifier("wind_" + (j+1), "id", getPackageName());
+                        checkTime = String.valueOf(((TextView) MainActivity.this.findViewById(textViewId_time)).getText());
+                    }
+
+                    ((TextView) MainActivity.this.findViewById(textViewId_weather)).setText(weather);
+                    ((TextView) MainActivity.this.findViewById(textViewId_temp)).setText(temp + "°C");
+                    ((TextView) MainActivity.this.findViewById(textViewId_wind)).setText(wind + " Knots");
+
+                    j++;
                 }
             } catch (JSONException e) {
                 throw new RuntimeException(e);

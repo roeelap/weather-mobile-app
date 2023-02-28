@@ -15,7 +15,7 @@ public class GetWeather {
     // The IP
 
     // TODO: fix IP
-    private final static String IP = "10.0.0.27";
+    private final static String IP = "10.0.2.2";
     // The URL to use the server
     private final static String REQUEST_URL = "http://" + IP + ":8080/weather";
 
