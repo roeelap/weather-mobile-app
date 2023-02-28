@@ -54,7 +54,7 @@ function getWeather (lat, lon, date, cb) {
 				// Getting the relevant data from the json
 				let relevantData = [];
 				data.list.forEach(item => {
-					// Only add items with date recieved
+					// Only add items with date received
 					if (item.dt_txt.startsWith(date)) {
 						let dateSplit = item.dt_txt.split(" ")[0];
 						let timeSplit = item.dt_txt.split(" ")[1].split(":").slice(0, 2).join(":");
