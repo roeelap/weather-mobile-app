@@ -39,10 +39,22 @@
             android:id="@+id/save_marker_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:background="#FFFFFF"
             android:padding="10dp"
             android:text="@string/save_location_button"
             android:textSize="15sp"
+            android:visibility="gone"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/delete_marker_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#D11A2A"
+            android:padding="5dp"
+            android:text="@string/delete_location_button"
+            android:textSize="12sp"
+            android:textColor="@color/white"
             android:visibility="gone"/>
     </LinearLayout>
 

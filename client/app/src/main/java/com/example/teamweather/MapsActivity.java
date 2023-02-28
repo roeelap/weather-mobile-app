@@ -42,12 +42,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationClient;
     private LatLng currentDeviceLocation;
 
+    private String userName;
+
     private ArrayList<TravelLocation> locations;
     private final ArrayList<Marker> markers = new ArrayList<>();
 
     private View getWeatherButton;
     private View saveMarkerButton;
     private View locationNameEditText;
+    private View deleteMarkerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +61,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // get the markers previously added by the user
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            locations = bundle.getParcelableArrayList("markers");
+            userName = bundle.getString("userName");
+            locations = bundle.getParcelableArrayList("locations");
         }
 
         getWeatherButton = findViewById(R.id.get_weather_button);
         saveMarkerButton = findViewById(R.id.save_marker_button);
         locationNameEditText = findViewById(R.id.location_name_edit_text);
+        deleteMarkerButton = findViewById(R.id.delete_marker_button);
 
         // set up location
         getLocationPermission();
@@ -174,6 +179,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         createUserMapMarkers();
     }
 
+    /**
+     * Creates a marker on the map.
+     * @param name The name of the marker.
+     * @param latLng The location of the marker.
+     */
     private Marker createMapMarker(String name, LatLng latLng) {
         return mMap.addMarker(new MarkerOptions().position(latLng).title(name));
     }
@@ -204,10 +214,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setUpGetWeatherButton(name, marker.getPosition().latitude, marker.getPosition().longitude);
         getWeatherButton.setVisibility(View.VISIBLE);
 
+        // show the delete and save button, and the location name edit text
+        setUpSaveButtonAndEditText(marker);
+        saveMarkerButton.setVisibility(View.VISIBLE);
+        locationNameEditText.setVisibility(View.VISIBLE);
+        setUpDeleteButton(marker);
+        deleteMarkerButton.setVisibility(View.VISIBLE);
+
         // remove any markers that were added to the map but not saved
         removeUnsavedMarkers();
-        saveMarkerButton.setVisibility(View.GONE);
-        locationNameEditText.setVisibility(View.GONE);
 
         return false;
     }
@@ -221,13 +236,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapClick(@NonNull LatLng latLng) {
         Log.e(TAG, "onMapClick: " + latLng.latitude + ", " + latLng.longitude);
 
-        // if the button is visible, remove it from the screen
+        // if a button is visible, remove it from the screen
         if (getWeatherButton.getVisibility() == View.VISIBLE) {
             getWeatherButton.setVisibility(View.GONE);
             // also, remove any markers that were added to the map but not saved
             removeUnsavedMarkers();
             saveMarkerButton.setVisibility(View.GONE);
             locationNameEditText.setVisibility(View.GONE);
+            deleteMarkerButton.setVisibility(View.GONE);
         } else {
             // if the button was not visible, propose to add a new marker
             Marker newMarker = createMapMarker("new location", latLng);
@@ -264,20 +280,93 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ((EditText)locationNameEditText).setText(marker.getTitle());
 
         saveMarkerButton.setOnClickListener(v -> {
-            String name = ((EditText)locationNameEditText).getText().toString();
-            if (name.isEmpty() || name.equals("new location")) {
+            String newName = ((EditText)locationNameEditText).getText().toString();
+            if (newName.isEmpty() || newName.equals("new location")) {
                 Toast.makeText(this, "Please enter a valid name for the location", Toast.LENGTH_SHORT).show();
             } else {
-                marker.setTitle(name);
+                setUpGetWeatherButton(newName, marker.getPosition().latitude, marker.getPosition().longitude);
                 saveMarkerButton.setVisibility(View.GONE);
                 locationNameEditText.setVisibility(View.GONE);
+                deleteMarkerButton.setVisibility(View.GONE);
 
-                // add the marker to the list of user locations
-                locations.add(new TravelLocation(name, new LatLng(marker.getPosition().latitude, marker.getPosition().longitude)));
+                // add the marker to the list of user locations, or update its name if it already exists
+                addLocation(marker, newName);
+                marker.setTitle(newName);
 
-                // TODO: save the marker to the database
+                // save the marker to the database
+                saveLocationsToDatabase();
+            }
+        });
+    }
 
-                Toast.makeText(this, "Location saved", Toast.LENGTH_SHORT).show();
+    /**
+     * Adds a location to the list of user locations, or updates its name if it already exists.
+     * Also saves the list of locations to the database.
+     * @param marker The marker to add.
+     * @param newName The new name of the marker.
+     */
+    private void addLocation(Marker marker, String newName) {
+        for (TravelLocation location : locations) {
+            String name = location.getName();
+            double lat = location.getLatLng().latitude;
+            double lng = location.getLatLng().longitude;
+            if (name.equals(marker.getTitle()) &&
+                    lat == marker.getPosition().latitude &&
+                    lng == marker.getPosition().longitude) {
+                location.setName(newName);
+                saveLocationsToDatabase();
+                return;
+            }
+        }
+
+        locations.add(new TravelLocation(newName, new LatLng(marker.getPosition().latitude, marker.getPosition().longitude)));
+        saveLocationsToDatabase();
+    }
+
+    private void setUpDeleteButton(Marker marker) {
+        deleteMarkerButton.setOnClickListener(v -> {
+            deleteLocation(marker);
+            deleteMarkerButton.setVisibility(View.GONE);
+            saveMarkerButton.setVisibility(View.GONE);
+            locationNameEditText.setVisibility(View.GONE);
+            getWeatherButton.setVisibility(View.GONE);
+            marker.remove();
+        });
+    }
+
+    /**
+     * Deletes a location from the list of user locations, and saves the list of locations to the database.
+     * @param marker The marker to delete.
+     */
+    private void deleteLocation(Marker marker) {
+        for (TravelLocation location : locations) {
+            String name = location.getName();
+            double lat = location.getLatLng().latitude;
+            double lng = location.getLatLng().longitude;
+            if (name.equals(marker.getTitle()) &&
+                    lat == marker.getPosition().latitude &&
+                    lng == marker.getPosition().longitude) {
+                locations.remove(location);
+                break;
+            }
+        }
+
+        saveLocationsToDatabase();
+    }
+
+    private void saveLocationsToDatabase() {
+        Log.d(TAG, "saving locations to database");
+
+        UserFetcher fetcher = new UserFetcher(this);
+        fetcher.updateUserLocations(userName, locations, response -> {
+            if (response.isError) {
+                // server error
+                Toast.makeText(MapsActivity.this, "Error while trying save, please try again", Toast.LENGTH_SHORT).show();
+            } else if (response.isSuccessful) {
+                Toast.makeText(MapsActivity.this, "Updated locations", Toast.LENGTH_SHORT).show();
+            } else {
+                // this should never be executed
+                Toast.makeText(MapsActivity.this, "Not a valid location to save", Toast.LENGTH_SHORT).show();
             }
         });
     }

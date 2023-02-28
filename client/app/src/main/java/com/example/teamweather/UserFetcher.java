@@ -25,12 +25,12 @@ public class UserFetcher {
     public static class UserResponse {
         public boolean isError;
         public boolean isSuccessful;
-        public ArrayList<TravelLocation> userMarkers;
+        public ArrayList<TravelLocation> userLocations;
 
-        public UserResponse(boolean isError, boolean isSuccessful, ArrayList<TravelLocation> userMarkers) {
+        public UserResponse(boolean isError, boolean isSuccessful, ArrayList<TravelLocation> userLocations) {
             this.isError = isError;
             this.isSuccessful = isSuccessful;
-            this.userMarkers = userMarkers;
+            this.userLocations = userLocations;
         }
     }
 
@@ -59,9 +59,9 @@ public class UserFetcher {
                     Log.d(TAG, "Got response: " + response.toString());
                     try {
                         boolean isSuccessful = response.getBoolean("result");
-                        JSONArray userMarkers = response.getJSONArray("markers");
-                        ArrayList<TravelLocation> markers = TravelLocation.parseTravelLocations(userMarkers);
-                        UserResponse res = new UserResponse(false, isSuccessful, markers);
+                        JSONArray userLocations = response.getJSONArray("markers");
+                        ArrayList<TravelLocation> locations = TravelLocation.parseTravelLocations(userLocations);
+                        UserResponse res = new UserResponse(false, isSuccessful, locations);
                         listener.onResponse(res);
                     } catch (JSONException e) {
                         Log.e(TAG, "Error while parsing response: " + e.getMessage());
@@ -75,45 +75,41 @@ public class UserFetcher {
         _queue.add(req);
     }
 
-//    public void updateUserMarkers(final String userName, final ArrayList<TravelLocation> markers, final UserResponseListener listener) {
-//        JSONObject postBody = new JSONObject();
-//        try {
-//            postBody.put("userName", userName);
-//            JSONArray markersJson = new JSONArray();
-//            for (TravelLocation marker : markers) {
-//                markersJson.put(new JSONObject() {
-//                    {
-//                        put("name", marker.getName());
-//                        put("lat", marker.getLatLng().latitude);
-//                        put("lon", marker.getLatLng().longitude);
-//                    }
-//                });
-//            }
-//            postBody.put("markers", markersJson);
-//        } catch (JSONException e) {
-//            Log.e(TAG, "Error while creating post body: " + e.getMessage());
-//            listener.onResponse(createErrorResponse());
-//            return;
-//        }
+    public void updateUserLocations(final String userName, final ArrayList<TravelLocation> locations, final UserResponseListener listener) {
+        JSONObject postBody = new JSONObject();
+        try {
+            postBody.put("userName", userName);
+            JSONArray markersJson = new JSONArray();
+            for (TravelLocation location : locations) {
+                JSONObject markerJson = new JSONObject();
+                markerJson.put("name", location.getName());
+                markerJson.put("lat", location.getLatLng().latitude);
+                markerJson.put("lng", location.getLatLng().longitude);
+                markersJson.put(markerJson);
+            }
+            postBody.put("markers", markersJson);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error while creating post body: " + e.getMessage());
+            listener.onResponse(createErrorResponse());
+            return;
+        }
+        Log.e(TAG, "Post body: " + postBody);
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, UPDATE_USER_MARKERS_REQUEST_URL, postBody,
+            response -> {
+                Log.d(TAG, "Got response: " + response.toString());
+                try {
+                    boolean isSuccessful = response.getBoolean("result");
+                    UserResponse res = new UserResponse(false, isSuccessful, null);
+                    listener.onResponse(res);
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error while parsing response: " + e.getMessage());
+                    listener.onResponse(createErrorResponse());
+                }
+            }, error -> {
+                Log.e(TAG, "Error while parsing response: " + error.getMessage());
+                listener.onResponse(createErrorResponse());
+        });
 
-//        JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, UPDATE_USER_MARKERS_REQUEST_URL, postBody
-//                response -> {
-//                    Log.d(TAG, "Got response: " + response.toString());
-//                    try {
-//                        boolean isSuccessful = response.getBoolean("result");
-//                        JSONArray userMarkers = response.getJSONArray("markers");
-//                        ArrayList<TravelLocation> markers = TravelLocation.parseTravelLocations(userMarkers);
-//                        UserResponse res = new UserResponse(false, isSuccessful, markers);
-//                        listener.onResponse(res);
-//                    } catch (JSONException e) {
-//                        Log.e(TAG, "Error while parsing response: " + e.getMessage());
-//                        listener.onResponse(createErrorResponse());
-//                    }
-//                }, error -> {
-//            Log.e(TAG, "Error while parsing response: " + error.getMessage());
-//            listener.onResponse(createErrorResponse());
-//        });
-//
-//        _queue.add(req);
-//    }
+        _queue.add(req);
+    }
 }

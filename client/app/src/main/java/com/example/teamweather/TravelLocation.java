@@ -17,7 +17,7 @@ public class TravelLocation implements Parcelable {
 
     private static final String TAG = "TravelLocation_Class";
 
-    private final String name;
+    private String name;
     private final LatLng latLng;
 
     public TravelLocation(String name, LatLng latLng) {
@@ -45,19 +45,20 @@ public class TravelLocation implements Parcelable {
     public String getName() {
         return name;
     }
-
     public LatLng getLatLng() {
         return latLng;
     }
 
-    public static ArrayList<TravelLocation> parseTravelLocations(JSONArray userMarkers) {
+    public void setName(String newName) { this.name = newName; }
+
+    public static ArrayList<TravelLocation> parseTravelLocations(JSONArray userLocations) {
         ArrayList<TravelLocation> markers = new ArrayList<>();
-        for (int i = 0; i < userMarkers.length(); i++) {
+        for (int i = 0; i < userLocations.length(); i++) {
             try {
-                String markerName = userMarkers.getJSONObject(i).getString("name");
-                double lat = userMarkers.getJSONObject(i).getDouble("lat");
-                double lng = userMarkers.getJSONObject(i).getDouble("lng");
-                markers.add(new TravelLocation(markerName, new LatLng(lat, lng)));
+                String locationName = userLocations.getJSONObject(i).getString("name");
+                double lat = userLocations.getJSONObject(i).getDouble("lat");
+                double lng = userLocations.getJSONObject(i).getDouble("lng");
+                markers.add(new TravelLocation(locationName, new LatLng(lat, lng)));
             } catch (JSONException e) {
                 Log.e(TAG, "Error while parsing travel location: " + e.getMessage());
             }
