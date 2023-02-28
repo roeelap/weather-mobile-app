@@ -46,6 +46,15 @@ public class UserFetcher {
         return new UserResponse(true, false, null);
     }
 
+    /**
+     * This method is called when a user is trying to login or create a new account.
+     * If the desired action is to login, it validates the user and if the user exists, it will start the MapsActivity.
+     * If the desired action is to create a new account, it will create a new user in the database.
+     * @param isCreateNewUser true if the user is trying to create a new account, false if the user is trying to login
+     * @param userName the user's unique username
+     * @param password the user's password
+     * @param listener the listener to be called when the response is received
+     */
     public void fetchUser(final boolean isCreateNewUser, final String userName, final String password, final UserResponseListener listener) {
         String url;
         if (isCreateNewUser) {
@@ -75,6 +84,13 @@ public class UserFetcher {
         _queue.add(req);
     }
 
+    /**
+     * This method is called when the user clicks on the save button.
+     * It sends the user's locations to the server to be saved in the database.
+     * @param userName the user's unique username
+     * @param locations the user's locations
+     * @param listener the listener to be called when the response is received
+     */
     public void updateUserLocations(final String userName, final ArrayList<TravelLocation> locations, final UserResponseListener listener) {
         JSONObject postBody = new JSONObject();
         try {

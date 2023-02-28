@@ -199,6 +199,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /**
+     * Removes any marker that was created by the user but not saved.
+     * This is done by checking if the marker's title is "new location".
+     * Will execute when the user clicks on the map after creating a marker without saving it.
+     */
+    private void removeUnsavedMarkers() {
+        for (Marker marker : markers) {
+            if (Objects.equals(marker.getTitle(), "new location")) {
+                marker.remove();
+            }
+        }
+    }
+
+    /**
      * Called when a marker is clicked.
      * shows the get weather button and sets its text to the marker's name.
      * When the button is clicked, the MainActivity is opened with the marker's name as a parameter.
@@ -256,14 +269,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void removeUnsavedMarkers() {
-        for (Marker marker : markers) {
-            if (Objects.equals(marker.getTitle(), "new location")) {
-                marker.remove();
-            }
-        }
-    }
-
+    /**
+     * Sets up the get weather button. Makes that when it will be clicked,
+     * the MainActivity will be opened with the marker's name, and LatLng fields as parameters.
+     * @param name The name of the location.
+     * @param lat The latitude of the location.
+     * @param lng The longitude of the location.
+     */
     private void setUpGetWeatherButton(String name, double lat, double lng) {
         ((Button) getWeatherButton).setText(getString(R.string.get_weather, name));
         ((Button) getWeatherButton).setText(getString(R.string.get_weather, name));
@@ -276,6 +288,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    /**
+     * Sets up the save button and the location name edit text. Makes that when it will be clicked,
+     * the given marker will be saved to the map, and the location
+     * will be added to the list of user locations.
+     * If the location already exists, its name will be updated.
+     * @param marker The marker that the button will delete.
+     */
     private void setUpSaveButtonAndEditText(Marker marker) {
         ((EditText)locationNameEditText).setText(marker.getTitle());
 
@@ -323,6 +342,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         saveLocationsToDatabase();
     }
 
+    /**
+     * Sets up the delete button. Makes that when it will be clicked,
+     * the given marker will be deleted from the map, and the location
+     * will be deleted from the list of user locations.
+     * @param marker The marker to delete.
+     */
     private void setUpDeleteButton(Marker marker) {
         deleteMarkerButton.setOnClickListener(v -> {
             deleteLocation(marker);
@@ -354,6 +379,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         saveLocationsToDatabase();
     }
 
+    /**
+     * Saves the ArrayList<TravelLocation> locations to the database.
+     */
     private void saveLocationsToDatabase() {
         Log.d(TAG, "saving locations to database");
 
