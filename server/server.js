@@ -28,7 +28,7 @@ app.get('/weather', (req, res) => {
 		return res.status(500).json({err: "please provide valid coordinates!"});
 	}
 
-    console.log("recieved lat: " + lat + ", lon: " + lon + ", date: " + date);
+    console.log("received lat: " + lat + ", lon: " + lon + ", date: " + date);
 
     // calling getWeather function
 	getWeather(lat, lon, date, (err, json) => {
@@ -69,8 +69,9 @@ function getWeather (lat, lon, date, cb) {
 						relevantData.push(relevantItem);
 					}
 				});
+
 				console.log("Data cleaned!");
-				return cb(null, relevantData);
+				return cb(null, {data: relevantData});
 	        }
 	    
     });

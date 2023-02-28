@@ -11,13 +11,13 @@ import org.json.JSONException;
 
 public class GetWeather {
 
-    private RequestQueue _queue;
+    private final RequestQueue _queue;
     // The IP
-    private final static String IP = "10.0.2.2";
+    private final static String IP = "10.0.0.27";
     // The URL to use the server
     private final static String REQUEST_URL = "http://" + IP + ":8080/weather";
 
-    public class WeatherResponse {
+    public static class WeatherResponse {
         public boolean isError;
         public JSONArray weather;
 
@@ -35,7 +35,7 @@ public class GetWeather {
         _queue = Volley.newRequestQueue(context);
     }
 
-    private WeatherResponse createErrorResponse(String err) {
+    private WeatherResponse createErrorResponse() {
         return new WeatherResponse(true, null);
     }
 
@@ -51,9 +51,9 @@ public class GetWeather {
                     }
                     // deals with errors
                     catch (JSONException e) {
-                        listener.onResponse(createErrorResponse(e.toString()));
+                        listener.onResponse(createErrorResponse());
                     }
-                }, error -> listener.onResponse(createErrorResponse(error.toString())));
+                }, error -> listener.onResponse(createErrorResponse()));
         _queue.add(req);
     }
 }
