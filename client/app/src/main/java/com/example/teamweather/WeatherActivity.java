@@ -11,16 +11,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity {
+public class WeatherActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
@@ -29,11 +30,14 @@ public class MainActivity extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private Button fetchButton;
     private String dateFormat;
+    // values of the date chosen
+    int year, month, day;
+    boolean firstTime = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_weather);
 
         // set up the location title (get the location of the marker that was chosen in the map)
         locationTextView = findViewById(R.id.textViewLocation);
@@ -43,13 +47,15 @@ public class MainActivity extends AppCompatActivity {
         mDisplayDate = findViewById(R.id.textView_selectDate);
 
         mDisplayDate.setOnClickListener(view -> {
-            Calendar cal = Calendar.getInstance();
-            int year = cal.get(Calendar.YEAR);
-            int month = cal.get(Calendar.MONTH);
-            int day = cal.get(Calendar.DAY_OF_MONTH);
-
+            if (firstTime) {
+                Calendar cal = Calendar.getInstance();
+                year = cal.get(Calendar.YEAR);
+                month = cal.get(Calendar.MONTH);
+                day = cal.get(Calendar.DAY_OF_MONTH);
+                firstTime = false;
+            }
             DatePickerDialog dialog = new DatePickerDialog(
-                    MainActivity.this,
+                    WeatherActivity.this,
                     android.R.style.Theme_Holo_Dialog_MinWidth,
                     mDateSetListener,
                     year, month, day);
@@ -58,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mDateSetListener = (datePicker, year, month, day) -> {
+            this.year = year;
+            this.month = month;
+            this.day = day;
             month = month + 1;
             Log.d(TAG, "onDateSet: date: dd/mm/yyyy " + day + "/" + month + "/" + year);
 
@@ -102,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
             }
             // Parse the JSON response
             try {
+                String icon = null; // for the weather icon at noon
                 JSONArray jsonArray = response.weather;
                 TableLayout tableLayout = findViewById(R.id.weather_table);
 
@@ -121,26 +131,36 @@ public class MainActivity extends AppCompatActivity {
                     int textViewId_temp = getResources().getIdentifier("temp_" + (j+1), "id", getPackageName());
                     int textViewId_wind = getResources().getIdentifier("wind_" + (j+1), "id", getPackageName());
 
-                    String checkTime = String.valueOf(((TextView) MainActivity.this.findViewById(textViewId_time)).getText());
+                    String checkTime = String.valueOf(((TextView) WeatherActivity.this.findViewById(textViewId_time)).getText());
 
+                    // if the current day is picked, makes sure that the passed hours are set to "-"
                     while (!time.equals(checkTime)) {
-                        ((TextView) MainActivity.this.findViewById(textViewId_weather)).setText("-");
-                        ((TextView) MainActivity.this.findViewById(textViewId_temp)).setText("-");
-                        ((TextView) MainActivity.this.findViewById(textViewId_wind)).setText("-");
+                        ((TextView) WeatherActivity.this.findViewById(textViewId_weather)).setText("-");
+                        ((TextView) WeatherActivity.this.findViewById(textViewId_temp)).setText("-");
+                        ((TextView) WeatherActivity.this.findViewById(textViewId_wind)).setText("-");
                         j++;
                         textViewId_time = getResources().getIdentifier("time_" + (j+1), "id", getPackageName());
                         textViewId_weather = getResources().getIdentifier("weather_" + (j+1), "id", getPackageName());
                         textViewId_temp = getResources().getIdentifier("temp_" + (j+1), "id", getPackageName());
                         textViewId_wind = getResources().getIdentifier("wind_" + (j+1), "id", getPackageName());
-                        checkTime = String.valueOf(((TextView) MainActivity.this.findViewById(textViewId_time)).getText());
+                        checkTime = String.valueOf(((TextView) WeatherActivity.this.findViewById(textViewId_time)).getText());
                     }
 
-                    ((TextView) MainActivity.this.findViewById(textViewId_weather)).setText(weather);
-                    ((TextView) MainActivity.this.findViewById(textViewId_temp)).setText(temp + "°C");
-                    ((TextView) MainActivity.this.findViewById(textViewId_wind)).setText(wind + " Knots");
+                    ((TextView) WeatherActivity.this.findViewById(textViewId_weather)).setText(weather);
+                    ((TextView) WeatherActivity.this.findViewById(textViewId_temp)).setText(Math.round(temp) + "°C");
+                    ((TextView) WeatherActivity.this.findViewById(textViewId_wind)).setText(wind + " Knots");
+
+                    // Set the icon image to the weather at noon
+                    if (time.equals("12:00"))
+                        icon =  jsonObject.getString("icon");
 
                     j++;
                 }
+                // inserting the icon
+                String iconUrl = "http://openweathermap.org/img/wn/" + icon + "@2x.png";
+                ImageView iconView = findViewById(R.id.weather_icon);
+                Picasso.get().load(iconUrl).into(iconView);
+
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }

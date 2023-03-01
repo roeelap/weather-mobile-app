@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.teamweather.databinding.ActivityMapsBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,7 +26,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.example.teamweather.databinding.ActivityMapsBinding;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
@@ -280,7 +280,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ((Button) getWeatherButton).setText(getString(R.string.get_weather, name));
         ((Button) getWeatherButton).setText(getString(R.string.get_weather, name));
         getWeatherButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, WeatherActivity.class);
             intent.putExtra("location", name);
             intent.putExtra("lat", lat);
             intent.putExtra("lng", lng);
