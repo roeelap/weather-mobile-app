@@ -88,7 +88,7 @@ public class WeatherActivity extends AppCompatActivity {
         fetchButton.setOnClickListener(this::fetchWeather);
     }
     public void fetchWeather(final View view) {
-        final GetWeather fetcher = new GetWeather(view.getContext());
+        final WeatherFetcher fetcher = new WeatherFetcher(view.getContext());
         // getting the lat and lng
         // TODO: fix default values <<<<<<<<<<<<<<<<<<<
         double lat = getIntent().getDoubleExtra("lat", 32.085300);

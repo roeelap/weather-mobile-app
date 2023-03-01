@@ -37,11 +37,9 @@ public class CreateAccountActivity extends AppCompatActivity {
 
         // validate inputs
         if (userName.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            // TODO: display error message - please fill out all fields
             Toast.makeText(CreateAccountActivity.this, "Please fill out all fields", Toast.LENGTH_SHORT).show();
             return;
         } else if (!password.equals(confirmPassword)) {
-            // TODO: display error message - passwords do not match
             Toast.makeText(CreateAccountActivity.this, "Passwords do not match", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -58,7 +56,7 @@ public class CreateAccountActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             } else {
-                Toast.makeText(CreateAccountActivity.this, "There already exists a user with this username/password. Please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateAccountActivity.this, "There already exists a user with this username. Please try again", Toast.LENGTH_SHORT).show();
             }
         });
     }
