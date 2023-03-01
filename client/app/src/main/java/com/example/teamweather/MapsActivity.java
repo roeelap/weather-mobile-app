@@ -70,6 +70,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationNameEditText = findViewById(R.id.location_name_edit_text);
         deleteMarkerButton = findViewById(R.id.delete_marker_button);
 
+        // set up logout button
+        Button logoutButton = findViewById(R.id.logout_button);
+        logoutButton.setOnClickListener(v -> logout());
+
         // set up location
         getLocationPermission();
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -397,5 +401,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Toast.makeText(MapsActivity.this, "Not a valid location to save", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    /**
+     * Logs out the user and returns to the login screen.
+     */
+    private void logout() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

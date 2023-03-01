@@ -4,9 +4,11 @@ const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 
 const PORT = 8080;
+
 // our api key for open-weather-map service
 const API_KEY_OPEN_WEATHER_MAP = '51e61848b36dfec3fd6759c210361958';
 
+// mongo db setup
 const MONGO_URL = 'mongodb+srv://rlapushin:roee3171999@weather-mobile-app.iaar1av.mongodb.net/?retryWrites=true&w=majority';
 const DATABASE_NAME = 'weather-mobile-app';
 const USERS_COLLECTION_NAME = 'users';
@@ -22,7 +24,7 @@ app.use(bodyParser.json());
 
 app.get('/weather', (req, res) => {
 	console.log("inside app.get");
-	// recieving the lat and lon of the location
+	// receiving the lat and lon of the location
     let lat = req.query.lat;
 	let lon = req.query.lon;
 	let date = req.query.date;

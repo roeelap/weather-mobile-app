@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -91,9 +90,8 @@ public class WeatherActivity extends AppCompatActivity {
         backButton = findViewById(R.id.back);
         backButton.setOnClickListener(this::setBackButton);
     }
-
     public void fetchWeather(final View view) {
-        final GetWeather fetcher = new GetWeather(view.getContext());
+        final WeatherFetcher fetcher = new WeatherFetcher(view.getContext());
         // getting the lat and lng
         double lat = getIntent().getDoubleExtra("lat", 0);
         double lng = getIntent().getDoubleExtra("lat", 0);
@@ -108,8 +106,6 @@ public class WeatherActivity extends AppCompatActivity {
 
             if (response.isError) {
                 // TODO: implement <<<<<<<<<<<<<<<<<<<<<<<<<<<<
-//                ((TextView)MainActivity.this.findViewById(R.id.current_stock_price)).setText("");
-//                Toast.makeText(view.getContext(), response.price, Toast.LENGTH_LONG).show();
                 return;
             }
             // Parse the JSON response
@@ -117,6 +113,7 @@ public class WeatherActivity extends AppCompatActivity {
                 String icon = null; // for the weather icon
                 boolean noWeather = true; // to know if the icon was set already
                 JSONArray jsonArray = response.weather; // getting the json
+
 
                 // counter for the json objects
                 int j = 0;

@@ -17,4 +17,5 @@
     <string name="save_location_button">Save Location</string>
     <string name="new_location_hint">New location</string>
     <string name="delete_location_button">delete location</string>
+    <string name="log_out_button">Log out</string>
 </resources>
