@@ -11,10 +11,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -96,8 +94,6 @@ public class MainActivity extends AppCompatActivity {
 
             if (response.isError) {
                 // TODO: implement <<<<<<<<<<<<<<<<<<<<<<<<<<<<
-//                ((TextView)MainActivity.this.findViewById(R.id.current_stock_price)).setText("");
-//                Toast.makeText(view.getContext(), response.price, Toast.LENGTH_LONG).show();
                 return;
             }
             // Parse the JSON response
