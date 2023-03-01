@@ -13,13 +13,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Locale;
 
 public class WeatherActivity extends AppCompatActivity {
 
@@ -30,7 +31,7 @@ public class WeatherActivity extends AppCompatActivity {
     // values of the date chosen
     int year, month, day;
     boolean firstTime = true;
-    // field ID's
+    // field ID's for the weather table
     int textViewId_time, textViewId_weather, textViewId_temp, textViewId_wind;
 
     @Override
@@ -43,8 +44,8 @@ public class WeatherActivity extends AppCompatActivity {
         String location = "Weather for " + getIntent().getStringExtra("location");
         locationTextView.setText(location);
 
+        // the interface to choose the date to get the weather for
         mDisplayDate = findViewById(R.id.textView_selectDate);
-
         mDisplayDate.setOnClickListener(view -> {
             if (firstTime) {
                 Calendar cal = Calendar.getInstance();
@@ -61,14 +62,13 @@ public class WeatherActivity extends AppCompatActivity {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.show();
         });
-
         mDateSetListener = (datePicker, year, month, day) -> {
             this.year = year;
             this.month = month;
             this.day = day;
             month = month + 1;
             Log.d(TAG, "onDateSet: date: dd/mm/yyyy " + day + "/" + month + "/" + year);
-
+            // making the format of the date united for all numbers
             String dayString, monthString;
             if (day < 10)
                 dayString = "0" + day;
@@ -82,14 +82,19 @@ public class WeatherActivity extends AppCompatActivity {
             dateFormat = year + "-" + monthString + "-" + dayString;
             mDisplayDate.setText(date);
         };
-
-        // connecting to the buttons
+        // connecting to the button
         Button fetchWeather = findViewById(R.id.search);
         fetchWeather.setOnClickListener(this::fetchWeather);
     }
+
+    /**
+     * This method is called when the search button is clicked.
+     * It makes sure a date was picked and if so, goes over the the json received from the server and puts the data into the weather table.
+     * It also writes a relevant message for the user if the date pick is outside the date range.
+     */
     public void fetchWeather(final View view) {
         if (firstTime)
-            ((TextView) WeatherActivity.this.findViewById(R.id.error_text)).setText("Please enter a date");
+            ((TextView) WeatherActivity.this.findViewById(R.id.error_text)).setText(R.string.date_request);
         else {
             ((TextView) WeatherActivity.this.findViewById(R.id.error_text)).setText("");
             final WeatherFetcher fetcher = new WeatherFetcher(view.getContext());
@@ -115,7 +120,6 @@ public class WeatherActivity extends AppCompatActivity {
                     String icon = null; // for the weather icon
                     boolean noWeather = true; // to know if the icon was set already
                     JSONArray jsonArray = response.weather; // getting the json
-
                     // counter for the hours before the current time (relevant only if the day requested is today)
                     int j = 0;
                     // goes over the data and inserts it to the table
@@ -126,36 +130,34 @@ public class WeatherActivity extends AppCompatActivity {
                         String weather = jsonObject.getString("weather");
                         int temp = (int) (jsonObject.getDouble("temp"));
                         double wind = jsonObject.getDouble("wind");
-
+                        // gets the ID's of the next row in the weather table
                         updateFieldsID(j);
-
+                        // the first time in the json of the date chosen
                         String checkTime = String.valueOf(((TextView) WeatherActivity.this.findViewById(textViewId_time)).getText());
-
                         // if the current day is picked, makes sure that the passed hours are set to "-"
                         if (!checkTime.equals(time)) {
                             int times = weatherTableLen - jsonArray.length();
                             resetTableLines(times);
                             j = times;
                         }
-
-                        // update data
+                        // update data in the weather map
                         ((TextView) WeatherActivity.this.findViewById(textViewId_weather)).setText(weather);
-                        ((TextView) WeatherActivity.this.findViewById(textViewId_temp)).setText(temp + "°C");
-                        ((TextView) WeatherActivity.this.findViewById(textViewId_wind)).setText(wind + " Knots");
-
+                        String tempText = getResources().getString(R.string.temperature_text, temp);
+                        ((TextView) WeatherActivity.this.findViewById(textViewId_temp)).setText(tempText);
+                        String windText = String.format(Locale.getDefault(), "%.1f Knots", wind);
+                        ((TextView) WeatherActivity.this.findViewById(textViewId_wind)).setText(windText);
                         // Set the icon image to the weather at noon or later if it's later in the day
                         if ((time.equals("12:00") || time.equals("18:00") || time.equals("21:00")) && noWeather) {
                             icon = jsonObject.getString("icon");
                             noWeather = false;
                         }
-
                         j++;
                     }
-
+                    // empty json = no weather for this day
                     if (jsonArray.length() == 0) {
                         updateFieldsID(j);
                         resetTableLines(weatherTableLen);
-                        ((TextView) WeatherActivity.this.findViewById(R.id.error_text)).setText("There is no weather for the chosen date...");
+                        ((TextView) WeatherActivity.this.findViewById(R.id.error_text)).setText(R.string.date_out_of_bound);
                     }
                     // inserting the icon
                     String iconUrl = "http://openweathermap.org/img/wn/" + icon + "@2x.png";
@@ -169,6 +171,10 @@ public class WeatherActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Updates the ID's to the ones parallel in the weather table
+     * @param j The index number that is being read in the function.
+     */
     public void updateFieldsID (int j) {
         textViewId_time = getResources().getIdentifier("time_" + (j + 1), "id", getPackageName());
         textViewId_weather = getResources().getIdentifier("weather_" + (j + 1), "id", getPackageName());
@@ -176,6 +182,10 @@ public class WeatherActivity extends AppCompatActivity {
         textViewId_wind = getResources().getIdentifier("wind_" + (j + 1), "id", getPackageName());
     }
 
+    /**
+     * Resets the rows to a "-"
+     * @param times The number of empty rows to reset in the table.
+     */
     public void resetTableLines (int times) {
         for (int i = 0; i < times; i++) {
             ((TextView) WeatherActivity.this.findViewById(textViewId_weather)).setText("-");

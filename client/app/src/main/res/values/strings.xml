@@ -36,4 +36,8 @@
     <string name="_18_00">18:00</string>
     <string name="_21_00">21:00</string>
     <string name="weather_icon">Weather icon</string>
+    <string name="date_request">Please enter a date</string>
+    <string name="temperature_text">%d°C</string>
+    <string name="wind_speed">%1$s Knots</string>
+    <string name="date_out_of_bound">There is no weather for the chosen date...</string>
 </resources>
