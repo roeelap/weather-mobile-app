@@ -10,7 +10,7 @@
         android:id="@+id/textViewLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="location"
+        android:text="@string/location"
         android:gravity="center"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -23,7 +23,7 @@
         android:id="@+id/textView_day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Day:"
+        android:text="@string/day"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.229"
@@ -35,7 +35,7 @@
         android:id="@+id/textView_selectDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Select Date"
+        android:hint="@string/select_date"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.252"
@@ -48,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#73BFE1"
-        android:text="search"
+        android:text="@string/search"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.767"
@@ -56,20 +56,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.146" />
 
-    <ImageButton
-        android:id="@+id/back"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:backgroundTint="#73BFE1"
-        android:scaleType="centerCrop"
-        android:src="@drawable/back_arrow"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.01"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
+    <!--the weather table-->
     <TableLayout
         android:id="@+id/weather_table"
         android:layout_width="340dp"
@@ -91,28 +78,28 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Time" />
+                android:text="@string/time" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Weather" />
+                android:text="@string/weather" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Temp." />
+                android:text="@string/temp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Wind" />
+                android:text="@string/wind" />
         </TableRow>
 
         <TableRow
@@ -125,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="00:00" />
+                android:text="@string/_00_00" />
 
             <TextView
                 android:id="@+id/weather_1"
@@ -133,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
 
             <TextView
                 android:id="@+id/temp_1"
@@ -141,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
 
             <TextView
                 android:id="@+id/wind_1"
@@ -149,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
         </TableRow>
 
         <TableRow
@@ -162,7 +149,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="03:00" />
+                android:text="@string/_03_00" />
 
             <TextView
                 android:id="@+id/weather_2"
@@ -170,7 +157,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
 
             <TextView
                 android:id="@+id/temp_2"
@@ -178,7 +165,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
 
             <TextView
                 android:id="@+id/wind_2"
@@ -186,7 +173,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
         </TableRow>
 
         <TableRow
@@ -199,7 +186,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="06:00" />
+                android:text="@string/_06_00" />
 
             <TextView
                 android:id="@+id/weather_3"
@@ -207,7 +194,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
 
             <TextView
                 android:id="@+id/temp_3"
@@ -215,7 +202,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
 
             <TextView
                 android:id="@+id/wind_3"
@@ -223,7 +210,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
         </TableRow>
 
         <TableRow
@@ -236,7 +223,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="09:00" />
+                android:text="@string/_09_00" />
 
             <TextView
                 android:id="@+id/weather_4"
@@ -244,7 +231,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
 
             <TextView
                 android:id="@+id/temp_4"
@@ -252,7 +239,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
 
             <TextView
                 android:id="@+id/wind_4"
@@ -260,7 +247,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
         </TableRow>
 
         <TableRow
@@ -273,7 +260,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="12:00" />
+                android:text="@string/_12_00" />
 
             <TextView
                 android:id="@+id/weather_5"
@@ -281,7 +268,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
 
             <TextView
                 android:id="@+id/temp_5"
@@ -289,7 +276,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
 
             <TextView
                 android:id="@+id/wind_5"
@@ -297,7 +284,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
         </TableRow>
 
         <TableRow
@@ -310,7 +297,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="15:00" />
+                android:text="@string/_15_00" />
 
             <TextView
                 android:id="@+id/weather_6"
@@ -318,7 +305,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
 
             <TextView
                 android:id="@+id/temp_6"
@@ -326,7 +313,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
 
             <TextView
                 android:id="@+id/wind_6"
@@ -334,7 +321,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
         </TableRow>
 
         <TableRow
@@ -347,7 +334,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="18:00" />
+                android:text="@string/_18_00" />
 
             <TextView
                 android:id="@+id/weather_7"
@@ -355,7 +342,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
 
             <TextView
                 android:id="@+id/temp_7"
@@ -363,7 +350,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
 
             <TextView
                 android:id="@+id/wind_7"
@@ -371,7 +358,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
         </TableRow>
 
         <TableRow
@@ -384,7 +371,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="21:00" />
+                android:text="@string/_21_00" />
 
             <TextView
                 android:id="@+id/weather_8"
@@ -392,7 +379,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
 
             <TextView
                 android:id="@+id/temp_8"
@@ -400,7 +387,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
 
             <TextView
                 android:id="@+id/wind_8"
@@ -408,10 +395,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="-" />
+                android:text="@string/empty" />
         </TableRow>
     </TableLayout>
 
+    <!--a place for the weather icon-->
     <ImageView
         android:id="@+id/weather_icon"
         android:layout_width="100dp"
@@ -421,13 +409,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/weather_table"
-        app:layout_constraintVertical_bias="0.26999998" />
+        app:layout_constraintVertical_bias="0.26999998"
+        android:contentDescription="@string/weather_icon" />
 
+    <!--a place for in app errors prompts-->
     <TextView
         android:id="@+id/error_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
+        android:textColor="#FFA0A0"
         app:layout_constraintBottom_toTopOf="@+id/weather_table"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

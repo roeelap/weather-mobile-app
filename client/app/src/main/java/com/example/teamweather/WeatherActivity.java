@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.icu.util.Calendar;
@@ -12,9 +11,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -27,12 +26,12 @@ public class WeatherActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private TextView mDisplayDate;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
-    // TODO: fix
-    private ImageButton backButton;
     private String dateFormat;
     // values of the date chosen
     int year, month, day;
     boolean firstTime = true;
+    // field ID's
+    int textViewId_time, textViewId_weather, textViewId_temp, textViewId_wind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,92 +86,103 @@ public class WeatherActivity extends AppCompatActivity {
         // connecting to the buttons
         Button fetchWeather = findViewById(R.id.search);
         fetchWeather.setOnClickListener(this::fetchWeather);
-        backButton = findViewById(R.id.back);
-        backButton.setOnClickListener(this::setBackButton);
     }
     public void fetchWeather(final View view) {
-        final WeatherFetcher fetcher = new WeatherFetcher(view.getContext());
-        // getting the lat and lng
-        double lat = getIntent().getDoubleExtra("lat", 0);
-        double lng = getIntent().getDoubleExtra("lat", 0);
+        if (firstTime)
+            ((TextView) WeatherActivity.this.findViewById(R.id.error_text)).setText("Please enter a date");
+        else {
+            ((TextView) WeatherActivity.this.findViewById(R.id.error_text)).setText("");
+            final WeatherFetcher fetcher = new WeatherFetcher(view.getContext());
+            // getting the lat and lng
+            double lat = getIntent().getDoubleExtra("lat", 0);
+            double lng = getIntent().getDoubleExtra("lat", 0);
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            final int weatherTableLen = 8;
+            progressDialog.setMessage("Fetching weather...");
+            progressDialog.show();
 
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        final int weatherTableLen = 8;
-        progressDialog.setMessage("Fetching weather...");
-        progressDialog.show();
-
-        fetcher.dispatchRequest(String.valueOf(lat), String.valueOf(lng), dateFormat, response -> {
-            progressDialog.hide();
-
-            if (response.isError) {
-                // TODO: implement <<<<<<<<<<<<<<<<<<<<<<<<<<<<
-                return;
-            }
-            // Parse the JSON response
-            try {
-                String icon = null; // for the weather icon
-                boolean noWeather = true; // to know if the icon was set already
-                JSONArray jsonArray = response.weather; // getting the json
-
-
-                // counter for the json objects
-                int j = 0;
-                // goes over the data and inserts it to the table
-                for (int i = 0; i < weatherTableLen; i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(j);
-                    String time = jsonObject.getString("time");
-                    String weather = jsonObject.getString("weather");
-                    double temp = Math.round(jsonObject.getDouble("temp"));
-                    double wind = jsonObject.getDouble("wind");
-
-                    int textViewId_time = getResources().getIdentifier("time_" + (i + 1), "id", getPackageName());
-                    int textViewId_weather = getResources().getIdentifier("weather_" + (i + 1), "id", getPackageName());
-                    int textViewId_temp = getResources().getIdentifier("temp_" + (i + 1), "id", getPackageName());
-                    int textViewId_wind = getResources().getIdentifier("wind_" + (i + 1), "id", getPackageName());
-
-                    String checkTime = String.valueOf(((TextView) WeatherActivity.this.findViewById(textViewId_time)).getText());
-
-                    // if the current day is picked, makes sure that the passed hours are set to "-"
-                    while (!checkTime.equals(time)) {
-                        ((TextView) WeatherActivity.this.findViewById(textViewId_weather)).setText("-");
-                        ((TextView) WeatherActivity.this.findViewById(textViewId_temp)).setText("-");
-                        ((TextView) WeatherActivity.this.findViewById(textViewId_wind)).setText("-");
-                        i++;
-                        textViewId_time = getResources().getIdentifier("time_" + (i + 1), "id", getPackageName());
-                        textViewId_weather = getResources().getIdentifier("weather_" + (i + 1), "id", getPackageName());
-                        textViewId_temp = getResources().getIdentifier("temp_" + (i + 1), "id", getPackageName());
-                        textViewId_wind = getResources().getIdentifier("wind_" + (i + 1), "id", getPackageName());
-                        checkTime = String.valueOf(((TextView) WeatherActivity.this.findViewById(textViewId_time)).getText());
-                    }
-
-                    ((TextView) WeatherActivity.this.findViewById(textViewId_weather)).setText(weather);
-                    ((TextView) WeatherActivity.this.findViewById(textViewId_temp)).setText(temp + "°C");
-                    ((TextView) WeatherActivity.this.findViewById(textViewId_wind)).setText(wind + " Knots");
-
-                    // Set the icon image to the weather at noon or later if it's later in the day
-                    if ((time.equals("12:00") || time.equals("18:00") || time.equals("21:00")) && noWeather) {
-                        icon = jsonObject.getString("icon");
-                        noWeather = false;
-                    }
-
-                    j++;
+            fetcher.dispatchRequest(String.valueOf(lat), String.valueOf(lng), dateFormat, response -> {
+                progressDialog.hide();
+                // TODO: fix <<<<<<<<<<<<<<<
+                // checks if an Exception was received
+                if (response.isError) {
+                    resetTableLines(weatherTableLen);
+                    //Toast.makeText(view.getContext(), ???, Toast.LENGTH_LONG).show();
+                    return;
                 }
-                // inserting the icon
-                String iconUrl = "http://openweathermap.org/img/wn/" + icon + "@2x.png";
-                ImageView iconView = findViewById(R.id.weather_icon);
-                Picasso.get().load(iconUrl).into(iconView);
+                // Parse the JSON response
+                try {
+                    String icon = null; // for the weather icon
+                    boolean noWeather = true; // to know if the icon was set already
+                    JSONArray jsonArray = response.weather; // getting the json
 
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
-        });
+                    // counter for the hours before the current time (relevant only if the day requested is today)
+                    int j = 0;
+                    // goes over the data and inserts it to the table
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        ((TextView) WeatherActivity.this.findViewById(R.id.error_text)).setText("");
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        String time = jsonObject.getString("time");
+                        String weather = jsonObject.getString("weather");
+                        int temp = (int) (jsonObject.getDouble("temp"));
+                        double wind = jsonObject.getDouble("wind");
+
+                        updateFieldsID(j);
+
+                        String checkTime = String.valueOf(((TextView) WeatherActivity.this.findViewById(textViewId_time)).getText());
+
+                        // if the current day is picked, makes sure that the passed hours are set to "-"
+                        if (!checkTime.equals(time)) {
+                            int times = weatherTableLen - jsonArray.length();
+                            resetTableLines(times);
+                            j = times;
+                        }
+
+                        // update data
+                        ((TextView) WeatherActivity.this.findViewById(textViewId_weather)).setText(weather);
+                        ((TextView) WeatherActivity.this.findViewById(textViewId_temp)).setText(temp + "°C");
+                        ((TextView) WeatherActivity.this.findViewById(textViewId_wind)).setText(wind + " Knots");
+
+                        // Set the icon image to the weather at noon or later if it's later in the day
+                        if ((time.equals("12:00") || time.equals("18:00") || time.equals("21:00")) && noWeather) {
+                            icon = jsonObject.getString("icon");
+                            noWeather = false;
+                        }
+
+                        j++;
+                    }
+
+                    if (jsonArray.length() == 0) {
+                        updateFieldsID(j);
+                        resetTableLines(weatherTableLen);
+                        ((TextView) WeatherActivity.this.findViewById(R.id.error_text)).setText("There is no weather for the chosen date...");
+                    }
+                    // inserting the icon
+                    String iconUrl = "http://openweathermap.org/img/wn/" + icon + "@2x.png";
+                    ImageView iconView = findViewById(R.id.weather_icon);
+                    Picasso.get().load(iconUrl).into(iconView);
+
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
     }
 
-    private void setBackButton(final View view) {
-        backButton.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MapsActivity.class);
-            startActivity(intent);
-            finish();
-        });
+    public void updateFieldsID (int j) {
+        textViewId_time = getResources().getIdentifier("time_" + (j + 1), "id", getPackageName());
+        textViewId_weather = getResources().getIdentifier("weather_" + (j + 1), "id", getPackageName());
+        textViewId_temp = getResources().getIdentifier("temp_" + (j + 1), "id", getPackageName());
+        textViewId_wind = getResources().getIdentifier("wind_" + (j + 1), "id", getPackageName());
+    }
+
+    public void resetTableLines (int times) {
+        for (int i = 0; i < times; i++) {
+            ((TextView) WeatherActivity.this.findViewById(textViewId_weather)).setText("-");
+            ((TextView) WeatherActivity.this.findViewById(textViewId_temp)).setText("-");
+            ((TextView) WeatherActivity.this.findViewById(textViewId_wind)).setText("-");
+
+            updateFieldsID(i+1);
+        }
     }
 }

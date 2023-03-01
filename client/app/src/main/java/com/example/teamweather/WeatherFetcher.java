@@ -38,9 +38,7 @@ public class WeatherFetcher {
         _queue = Volley.newRequestQueue(context);
     }
 
-    private WeatherResponse createErrorResponse() {
-        return new WeatherResponse(true, null);
-    }
+    private WeatherResponse createErrorResponse() { return new WeatherResponse(true, null); }
 
     /**
      * This method is called when a user is trying fetch the weather for a location at a specific date.
