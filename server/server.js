@@ -2,6 +2,7 @@ const express = require('express');
 const request = require('request');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
+const bcrypt = require('bcrypt');
 
 const PORT = 8080;
 
@@ -16,6 +17,9 @@ const client = new MongoClient(MONGO_URL, {
     useNewUrlParser: true,
 	useUnifiedTopology: true
 });
+
+// bcrypt setup
+const saltRounds = 10;
 
 
 let app = express();
@@ -94,18 +98,20 @@ app.get('/validate-user', async (req, res) => {
 	.then(async () => {
 		console.log("connected to database!");
 		const collection = client.db(DATABASE_NAME).collection(USERS_COLLECTION_NAME);
-		const result = await collection.findOne({userName: userName, password: password});
-		console.log("user exists: " + (result !== null), result);
+		const user = await collection.findOne({userName: userName});
+		console.log("user exists: " + (user !== null), user);
 		client.close();
-		if (result !== null) {
-			if (result.markers === null) {
-				return res.json({result: true, markers: []});
+
+		bcrypt.compare(password, user.password, (err, result) => {
+			if (err) {
+				return res.json({result: false, markers: []});
+			} else if (user.markers === null) {
+				return res.json({result: result, markers: []});
 			}
-			return res.json({result: true, markers: result.markers});
-		} else {
-			return res.json({result: false, markers: []});
-		}
-	})
+
+			return res.json({result: result, markers: user.markers});
+		});
+	});
 });
 
 app.get('/create-user', (req, res) => {
@@ -116,15 +122,18 @@ app.get('/create-user', (req, res) => {
 	}
 	console.log("received userName: " + userName + ", password: " + password);
 
-	client.connect()
-	.then(async () => {
-		console.log("connected to database!");
-		const collection = client.db(DATABASE_NAME).collection(USERS_COLLECTION_NAME);
-		const result = await collection.insertOne({userName: userName, password: password, markers: []});
-		console.log("result: " + result);
-		client.close();
-		return res.json({result: result.acknowledged, markers: []});
-	})
+	bcrypt.hash(password, saltRounds, (err, hash) => {
+		console.log("hash: " + hash);
+		client.connect()
+		.then(async () => {
+			console.log("connected to database!");
+			const collection = client.db(DATABASE_NAME).collection(USERS_COLLECTION_NAME);
+			const result = await collection.insertOne({userName: userName, password: hash, markers: []});
+			console.log("result: " + result);
+			client.close();
+			return res.json({result: result.acknowledged, markers: []});
+		})
+	});
 });
 
 app.post('/update-user-markers', (req, res) => {
