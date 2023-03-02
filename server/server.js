@@ -155,10 +155,3 @@ app.post('/update-user-markers', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
 });
-
-// local URL:
-// http://localhost:8080/weather
-// local URL with demo details:
-// http://localhost:8080/weather?lat=32.085300&lon=34.781769&date=2023-03-01
-// Raw Json:
-// https://api.openweathermap.org/data/2.5/forecast?lat=32.085300&lon=34.781769&appid=51e61848b36dfec3fd6759c210361958&units=metric
