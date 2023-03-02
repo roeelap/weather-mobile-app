@@ -129,7 +129,7 @@ app.get('/create-user', (req, res) => {
 
 app.post('/update-user-markers', (req, res) => {
 	console.log("received post request to update user markers");
-	console.dir(req.body)
+	console.dir(req.body);
 	let userName = req.body.userName || null;
 	let markers = req.body.markers || null;
 

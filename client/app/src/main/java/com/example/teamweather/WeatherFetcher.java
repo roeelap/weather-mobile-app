@@ -55,8 +55,7 @@ public class WeatherFetcher {
                     try {
                         WeatherResponse res = new WeatherResponse(false, response.getJSONArray("data"));
                         listener.onResponse(res);
-                    }
-                    catch (JSONException e) {
+                    } catch (JSONException e) {
                         Log.e(TAG, "Error while parsing response: " + e.getMessage());
                         listener.onResponse(createErrorResponse());
                     }
