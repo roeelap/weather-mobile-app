@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -52,6 +53,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private View locationNameEditText;
     private View deleteMarkerButton;
 
+    private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +74,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         deleteMarkerButton = findViewById(R.id.delete_marker_button);
 
         // set up logout button
+        sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
         Button logoutButton = findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(v -> logout());
 
@@ -407,7 +411,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * Logs out the user and returns to the login screen.
      */
     private void logout() {
-        Intent intent = new Intent(this, LoginActivity.class);
+        // clear the shared preferences
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+        // return to the login screen
+        Intent intent = new Intent(this, StartScreenActivity.class);
         startActivity(intent);
         finish();
     }

@@ -18,7 +18,7 @@ public class UserFetcher {
 
     private static final String TAG = "UserFetcher";
     private final RequestQueue _queue;
-    private final static String IP = "10.0.2.2";
+    private final static String IP = "10.0.0.27";
     private final static String VALIDATE_USER_REQUEST_URL = "http://" + IP + ":8080/validate-user";
     private final static String CREATE_USER_REQUEST_URL = "http://" + IP + ":8080/create-user";
     private final static String UPDATE_USER_MARKERS_REQUEST_URL = "http://" + IP + ":8080/update-user-markers";

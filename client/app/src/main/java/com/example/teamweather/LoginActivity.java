@@ -3,12 +3,15 @@ package com.example.teamweather;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -19,6 +22,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
 
+    private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,6 +32,8 @@ public class LoginActivity extends AppCompatActivity {
         userNameEditText = findViewById(R.id.editTextUserName);
         passwordEditText = findViewById(R.id.editTextPassword);
         progressBar = findViewById(R.id.idPBLoading);
+
+        sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
 
         Button createAccountButton = findViewById(R.id.create_account_here_button);
         createAccountButton.setOnClickListener(v -> {
@@ -41,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
             login(userName, password);
         });
 
-        autoLogin();
+        // autoLogin();
     }
 
     /**
@@ -60,17 +67,27 @@ public class LoginActivity extends AppCompatActivity {
             if (response.isError) {
                 Toast.makeText(LoginActivity.this, "Error while trying to log in, please try again", Toast.LENGTH_SHORT).show();
             } else if (response.isSuccessful) {
-                Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("userName", userName);
-                bundle.putParcelableArrayList("locations", response.userLocations);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                finish();
+                // save user credentials in shared preferences
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("userName", userName);
+                editor.putString("password", password);
+                editor.apply();
+                // start MapsActivity
+                startApp(userName, response.userLocations);
             } else {
                 Toast.makeText(LoginActivity.this, "User does not exist", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void startApp(String userName, ArrayList<TravelLocation> userLocations) {
+        Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("userName", userName);
+        bundle.putParcelableArrayList("locations", userLocations);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        finish();
     }
 
     /**
