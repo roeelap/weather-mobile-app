@@ -39,6 +39,6 @@
     <string name="date_request">Please enter a date</string>
     <string name="temperature_text">%d°C</string>
     <string name="wind_speed">%1$s Knots</string>
-    <string name="date_out_of_bound">There is no weather for the chosen date...</string>
+    <string name="date_out_of_bound">There is no weather for the chosen date…</string>
     <string name="icon">icon</string>
 </resources>
